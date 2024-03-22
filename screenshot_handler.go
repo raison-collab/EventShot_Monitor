@@ -9,18 +9,18 @@ import (
 	"time"
 )
 
-func StartScreenshotHandler(eventChan chan Event) {
+func StartScreenshotHandler(config Config, eventChan chan Event) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
-	createScreensDir(fmt.Sprintf("%s/screens", currentDir))
+	createScreensDir(fmt.Sprintf("%s", currentDir+config.ScreenshotPath))
 
 	for {
 		event := <-eventChan
 		switch event.Type {
-		case "left_click":
-			captureScreen(currentDir)
+		case "do_screen":
+			captureScreen(config, currentDir)
 		}
 
 	}
@@ -36,7 +36,7 @@ func createScreensDir(fullPath string) {
 	}
 }
 
-func captureScreen(currentDir string) {
+func captureScreen(config Config, currentDir string) {
 	bounds := screenshot.GetDisplayBounds(0)
 	img, err := screenshot.CaptureRect(bounds)
 	if err != nil {
@@ -46,7 +46,7 @@ func captureScreen(currentDir string) {
 	fileName := fmt.Sprintf("screenshot_%d.png", time.Now().Unix())
 
 	// todo взять путь из конфига
-	fullPath := fmt.Sprintf("%s/screens", currentDir)
+	fullPath := fmt.Sprintf("%s", currentDir+config.ScreenshotPath)
 	// create file
 	file, err := os.Create(fmt.Sprintf("%s/%s", fullPath, fileName))
 	if err != nil {
@@ -66,5 +66,5 @@ func captureScreen(currentDir string) {
 		log.Printf("Ошибка записи файла: %v\n", err)
 	}
 
-	// todo отпарвить на сервер
+	SendScreenshotToServer(config, fileName)
 }

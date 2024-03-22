@@ -1,0 +1,8 @@
+{
+    "server_url": "http://127.0.0.1:8082/upload",
+    "screenshot_path": "/screens",
+    "interval": 500,
+    "events": [
+        "mleft"
+    ]
+}
