@@ -45,7 +45,7 @@ func SendScreenshotToServer(config Config, fileName string) {
 		return
 	}
 
-	req.Header.Set("Content-Type", "application/octet-stream")
+	req.Header.Set("Content-Type", "image/png")
 	req.Header.Set("Filename", fileName)
 
 	// Send Request
