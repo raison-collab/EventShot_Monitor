@@ -1,50 +1,46 @@
 package main
 
 import (
+	"fmt"
 	"io"
-	"mime/multipart"
+	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Header)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	file, header, err := r.FormFile("screenshot")
+	// todo добавить в конфиг
+	currentDir, err := os.Getwd()
 	if err != nil {
-		http.Error(w, "Error when receiving file", http.StatusBadRequest)
+		log.Printf("Ошибка в получении данной директории: %v\n", err)
 		return
 	}
 
-	defer func(file2 multipart.File) {
-		err = file2.Close()
-		if err != nil {
-			http.Error(w, "Error when saving file", http.StatusInternalServerError)
-			return
-		}
-	}(file)
-
-	filePath := filepath.Join("screens", header.Filename)
-	out, err := os.Create(filePath)
+	// Открываем файл для записи
+	file, err := os.Create(fmt.Sprintf("%s/screens/%s", currentDir, r.Header.Get("Filename")))
 	if err != nil {
-		http.Error(w, "Error with creating file", http.StatusInternalServerError)
+		log.Printf("Ошибка при создании файла: %v\n", err)
+		http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
 		return
 	}
 	defer func(f *os.File) {
 		err = f.Close()
 		if err != nil {
-			http.Error(w, "Error when closing file", http.StatusInternalServerError)
-			return
+			log.Printf("Ошибка при закрытии файла: %v\n", err)
 		}
-	}(out)
+	}(file)
 
-	_, err = io.Copy(out, file)
+	// Копируем содержимое тела запроса в файл
+	_, err = io.Copy(file, r.Body)
 	if err != nil {
-		http.Error(w, "Error with saving file", http.StatusInternalServerError)
+		log.Printf("Ошибка при записи файла: %v\n", err)
+		http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
 		return
 	}
 
@@ -52,7 +48,8 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write([]byte("File uploaded"))
 	if err != nil {
-		http.Error(w, "Error when uploading file", http.StatusInternalServerError)
+		log.Printf("ошибка при записи ответа")
+		http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
 		return
 	}
 }
