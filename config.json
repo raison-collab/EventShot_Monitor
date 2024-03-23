@@ -1,9 +1,0 @@
-{
-  "screenshot_dir": "/screens",
-  "log_filename": "app.log",
-  "server_url": "127.0.0.1:8082",
-  "upload_files": {
-    "allowed_file_extensions": [".png"],
-    "allowed_content-types": ["image/png"]
-  }
-}
