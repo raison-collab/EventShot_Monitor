@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	config, err := LoadConfig("config.json")
+	config, err := LoadConfig("config_server.json")
 	if err != nil {
 		log.Printf("[ERROR] Ошибка обработки конфиг файла: %v\n", err)
 		os.Exit(1)
