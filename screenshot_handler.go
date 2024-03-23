@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/kbinani/screenshot"
-	"image/png"
+	"image/jpeg"
 	"log"
 	"os"
 	"time"
@@ -17,10 +17,12 @@ func StartScreenshotHandler(config Config, eventChan chan Event) {
 	createScreensDir(fmt.Sprintf("%s", currentDir+config.ScreenshotPath))
 
 	for {
-		event := <-eventChan
-		switch event.Type {
-		case "do_screen":
-			captureScreen(config, currentDir)
+		select {
+		case event := <-eventChan:
+			switch event.Type {
+			case "do_screen":
+				captureScreen(config, currentDir)
+			}
 		}
 
 	}
@@ -43,9 +45,8 @@ func captureScreen(config Config, currentDir string) {
 		log.Printf("Ошибка захвата экрана: %v\n", err)
 		return
 	}
-	fileName := fmt.Sprintf("screenshot_%d.png", time.Now().Unix())
+	fileName := fmt.Sprintf("screen_%d.jpg", time.Now().Unix())
 
-	// todo взять путь из конфига
 	fullPath := fmt.Sprintf("%s", currentDir+config.ScreenshotPath)
 	// create file
 	file, err := os.Create(fmt.Sprintf("%s/%s", fullPath, fileName))
@@ -61,10 +62,12 @@ func captureScreen(config Config, currentDir string) {
 		}
 	}(file)
 
+	var opts jpeg.Options
+	opts.Quality = config.CompressionLevel // 50%
 	// check for error
-	if png.Encode(file, img) != nil {
+	if jpeg.Encode(file, img, &opts) != nil {
 		log.Printf("Ошибка записи файла: %v\n", err)
 	}
 
-	SendScreenshotToServer(config, fileName)
+	go SendScreenshotToServer(config, fileName)
 }
