@@ -1,3 +1,5 @@
 app.log
 config.json
+config_client.json
+config_server.json
 go.sum
