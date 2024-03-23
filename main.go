@@ -1,14 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	logFile := ConfigureLogging("app.log")
+	config, err := LoadConfig("config.json")
+	if err != nil {
+		log.Printf("[ERROR] Ошибка обработки конфиг файла: %v\n", err)
+		os.Exit(1)
+	}
+
+	logFile := ConfigureLogging(config.LogFilename)
 	defer func(f *os.File) {
 		err := f.Close()
 		if err != nil {
@@ -20,10 +25,13 @@ func main() {
 	if err != nil {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
-	CreateScreensDir(fmt.Sprintf("%s", currentDir+"/screens"))
 
-	http.HandleFunc("/upload", UploadHandler)
+	CreateScreensDir(currentDir + config.ScreenshotDir)
+
+	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+		UploadHandler(w, r, config)
+	})
 
 	log.Printf("[SERVER] start listening")
-	log.Fatal(http.ListenAndServe("127.0.0.1:8082", nil))
+	log.Fatal(http.ListenAndServe(config.ServerUrl, nil))
 }

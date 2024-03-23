@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func UploadHandler(w http.ResponseWriter, r *http.Request) {
+func UploadHandler(w http.ResponseWriter, r *http.Request, config Config) {
 	if r.Method != http.MethodPost {
 		log.Printf("[%s] Not allowed", r.Method)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -19,13 +19,13 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	contentType := r.Header.Get("Content-Type")
 	filename := r.Header.Get("Filename")
 
-	if contentType != "image/png" {
+	if !CheckContentType(contentType, config.UploadFiles.AllowedContentTypes) {
 		log.Printf("[SERVER] Content-Type %s not allowed", contentType)
 		http.Error(w, "Your Content-Type is not allowed, need image/png", http.StatusBadRequest)
 		return
 	}
 
-	if filepath.Ext(filename) != ".png" {
+	if !CheckFileExtension(filepath.Ext(filename), config.UploadFiles.AllowedFileExtensions) {
 		log.Printf("[SERVER] wrong file extension, need .png")
 		http.Error(w, "Wrong file extension, need .png", http.StatusBadRequest)
 		return
@@ -33,7 +33,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[%s] %s %s", r.Method, contentType, filename)
 
-	// todo добавить в конфиг
 	currentDir, err := os.Getwd()
 	if err != nil {
 		log.Printf("[ERROR] Ошибка в получении данной директории: %v\n", err)
@@ -41,7 +40,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Открываем файл для записи
-	file, err := os.Create(fmt.Sprintf("%s/screens/%s", currentDir, filename))
+	file, err := os.Create(fmt.Sprintf("%s/%s", currentDir+config.ScreenshotDir, filename))
 	if err != nil {
 		log.Printf("[ERROR] Ошибка при создании файла: %v\n", err)
 		http.Error(w, "[ERROR] Ошибка сервера", http.StatusInternalServerError)
