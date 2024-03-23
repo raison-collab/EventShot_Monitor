@@ -15,7 +15,7 @@ type Config struct {
 
 func LoadConfig() (Config, error) {
 	var config Config
-	file, err := os.Open("config.json")
+	file, err := os.Open("config_client.json")
 	if err != nil {
 		return config, err
 	}
