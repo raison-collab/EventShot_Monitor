@@ -7,11 +7,13 @@ import (
 )
 
 type Config struct {
-	ServerUrl        string   `json:"server_url"`
-	ScreenshotPath   string   `json:"screenshot_path"`
-	Interval         uint     `json:"interval"`
-	CompressionLevel int      `json:"compression_level"`
-	Events           []string `json:"events"`
+	ServerUrl               string   `json:"server_url"`
+	ScreenshotPath          string   `json:"screenshot_path"`
+	Interval                uint     `json:"interval"`
+	CompressionLevel        int      `json:"compression_level"`
+	MouseClickEvents        []uint16 `json:"mouse_click_events"`
+	KeyboardClickEvents     []string `json:"keyboard_click_events"`
+	KeyboardClickSpecEvents []uint16 `json:"keyboard_click_spec_events"`
 }
 
 func LoadConfig() (Config, error) {
