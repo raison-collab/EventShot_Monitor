@@ -73,3 +73,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, config Config) {
 	}
 	log.Printf("[SERVER] success request %d", http.StatusOK)
 }
+
+func PingHandler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusOK)
+}

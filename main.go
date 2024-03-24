@@ -28,8 +28,12 @@ func main() {
 
 	CreateScreensDir(currentDir + config.ScreenshotDir)
 
+	// обработчики endpoint
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 		UploadHandler(w, r, config)
+	})
+	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		PingHandler(w)
 	})
 
 	log.Printf("[SERVER] start listening")
