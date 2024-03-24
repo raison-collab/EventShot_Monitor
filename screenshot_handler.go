@@ -56,6 +56,4 @@ func captureScreen(config Config, currentDir string) {
 	if jpeg.Encode(file, img, &opts) != nil {
 		log.Printf("Ошибка записи файла: %v\n", err)
 	}
-
-	//go SendScreenshotToServer(config, fileName)
 }

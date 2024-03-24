@@ -13,6 +13,11 @@ func ScreenshotsSender(config Config) {
 	respCodeChan := make(chan int)
 	defer close(respCodeChan)
 
+	if config.SaveMode == 1 {
+		log.Printf("[SAVE MODE] Включен режим сохранения локально без отправки на сервер")
+		return
+	}
+
 	for {
 		hasFiles, err := HasFilesInScreenshotDir(config)
 		if err != nil {
@@ -36,7 +41,9 @@ func ScreenshotsSender(config Config) {
 			select {
 			case respCode := <-respCodeChan:
 				if respCode == http.StatusOK {
-					DeleteScreenshot(config, fileName)
+					if config.SaveMode == 2 {
+						DeleteScreenshot(config, fileName)
+					}
 				} else {
 					log.Printf("[NOT SENT] Файл %s не отправлен", fileName)
 				}
@@ -44,7 +51,7 @@ func ScreenshotsSender(config Config) {
 				log.Printf("[TIMEOUT] Таймаут отправки файла %s", fileName)
 			}
 		}
-		time.Sleep(time.Duration(config.Interval/2) * time.Millisecond)
+		time.Sleep(time.Duration(config.Interval) * time.Millisecond)
 	}
 }
 
@@ -110,6 +117,6 @@ func SendScreenshotToServer(config Config, fileName string) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	log.Println("Успешно отправлен")
+	log.Printf("[SEND FILE] Файл %s успешно отправлен", fileName)
 	return http.StatusOK, nil
 }

@@ -11,6 +11,7 @@ type Config struct {
 	ScreenshotPath          string   `json:"screenshot_path"`
 	Interval                uint     `json:"interval"`
 	Timeout                 uint     `json:"timeout"`
+	SaveMode                uint8    `json:"save_mode"`
 	CompressionLevel        int      `json:"compression_level"`
 	MouseClickEvents        []uint16 `json:"mouse_click_events"`
 	KeyboardClickEvents     []string `json:"keyboard_click_events"`
