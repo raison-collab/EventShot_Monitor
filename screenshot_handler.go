@@ -14,7 +14,6 @@ func StartScreenshotHandler(config Config, eventChan chan Event) {
 	if err != nil {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
-	createScreensDir(fmt.Sprintf("%s", currentDir+config.ScreenshotPath))
 
 	for {
 		select {
@@ -23,17 +22,6 @@ func StartScreenshotHandler(config Config, eventChan chan Event) {
 			case "do_screen":
 				captureScreen(config, currentDir)
 			}
-		}
-
-	}
-}
-
-// create dir
-func createScreensDir(fullPath string) {
-	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-		err = os.Mkdir(fullPath, os.ModePerm)
-		if err != nil {
-			log.Printf("Ошибка создании дирректории: %v\n", err)
 		}
 	}
 }
@@ -69,5 +57,5 @@ func captureScreen(config Config, currentDir string) {
 		log.Printf("Ошибка записи файла: %v\n", err)
 	}
 
-	go SendScreenshotToServer(config, fileName)
+	//go SendScreenshotToServer(config, fileName)
 }

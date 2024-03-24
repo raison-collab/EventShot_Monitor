@@ -10,6 +10,7 @@ type Config struct {
 	ServerUrl               string   `json:"server_url"`
 	ScreenshotPath          string   `json:"screenshot_path"`
 	Interval                uint     `json:"interval"`
+	Timeout                 uint     `json:"timeout"`
 	CompressionLevel        int      `json:"compression_level"`
 	MouseClickEvents        []uint16 `json:"mouse_click_events"`
 	KeyboardClickEvents     []string `json:"keyboard_click_events"`
