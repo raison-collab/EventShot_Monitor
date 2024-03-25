@@ -35,6 +35,9 @@ func main() {
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		PingHandler(w)
 	})
+	http.HandleFunc("/video", func(w http.ResponseWriter, r *http.Request) {
+		VideoHandler(w, r, config)
+	})
 
 	log.Printf("[SERVER] start listening")
 	log.Fatal(http.ListenAndServe(config.ServerUrl, nil))

@@ -36,3 +36,36 @@ func CheckFileExtension(current string, allowed []string) bool {
 	}
 	return false
 }
+
+// GetScreenshotsFilenames Получает имена файлов в дирректории. В дирректории должны быть файлы, лучше всего снаала проверить их наличие
+func GetScreenshotsFilenames(config Config) ([]string, error) {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return []string{}, err
+	}
+
+	entries, err := os.ReadDir(currentDir + config.ScreenshotDir)
+	if err != nil {
+		return []string{}, err
+	}
+	fileNames := make([]string, 0, len(entries))
+
+	for _, entry := range entries {
+		fileNames = append(fileNames, entry.Name())
+	}
+	return fileNames, nil
+}
+
+// HasFilesInScreenshotDir проверяет есть ли файлы в дирректории скриншотов
+func HasFilesInScreenshotDir(config Config) (bool, error) {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return false, err
+	}
+	// получаем все файлы из дирректории
+	entries, err := os.ReadDir(currentDir + config.ScreenshotDir)
+	if err != nil {
+		return false, err
+	}
+	return len(entries) > 0, nil
+}

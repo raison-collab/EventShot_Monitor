@@ -76,4 +76,20 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, config Config) {
 
 func PingHandler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
+	log.Printf("[GET] Ping")
+}
+
+func VideoHandler(w http.ResponseWriter, r *http.Request, config Config) {
+	if r.Method != http.MethodGet {
+		log.Printf("[GET] %s not allowed", r.URL)
+		http.Error(w, "Method not allowed", http.StatusBadRequest)
+		return
+	}
+
+	err := RenderVideo(config)
+	if err != nil {
+		log.Printf("[RENDER ERROR] Ошибка создания ролика: %v\n\n", err)
+		http.Error(w, "Ошибка сервера. Render video error", http.StatusInternalServerError)
+		return
+	}
 }
