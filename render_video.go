@@ -27,7 +27,7 @@ func RenderVideo(config Config) error {
 		return err
 	}
 
-	aw, err := mjpeg.New(currentDir+"avi_files/avi_01.avi", 200, 100, 30)
+	aw, err := mjpeg.New(currentDir+"/avi_files/avi_01.avi", 200, 100, 2)
 	if err != nil {
 		return err
 	}
@@ -37,16 +37,15 @@ func RenderVideo(config Config) error {
 		if err != nil {
 			return err
 		}
-
 		err = aw.AddFrame(data)
 		if err != nil {
 			return err
 		}
+	}
 
-		err = aw.Close()
-		if err != nil {
-			return err
-		}
+	err = aw.Close()
+	if err != nil {
+		return err
 	}
 
 	return nil

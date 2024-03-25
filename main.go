@@ -26,7 +26,8 @@ func main() {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
 
-	CreateScreensDir(currentDir + config.ScreenshotDir)
+	CreateDir(currentDir + config.ScreenshotDir)
+	CreateDir(currentDir + "/avi_files")
 
 	// обработчики endpoint
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {

@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-// CreateScreensDir Создаем диррекотрию для хранения скриншотов
-func CreateScreensDir(fullPath string) {
+// CreateDir Создаем диррекотрию для хранения скриншотов
+func CreateDir(fullPath string) {
 	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
 		err = os.Mkdir(fullPath, os.ModePerm)
 		if err != nil {
