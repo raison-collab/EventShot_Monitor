@@ -15,13 +15,26 @@ type VideoCfg struct {
 	Fps uint `json:"fps"`
 }
 
+type DatabaseCfg struct {
+	Postgres PostgresCfg `json:"postgres"`
+}
+
+type PostgresCfg struct {
+	Host     string `json:"host"`
+	Port     uint16 `json:"port"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	DbName   string `json:"database_name"`
+}
+
 type Config struct {
-	ScreenshotDir string     `json:"screenshot_dir"`
-	VideoDir      string     `json:"video_dir"`
-	LogFilename   string     `json:"log_filename"`
-	ServerUrl     string     `json:"server_url"`
-	UploadFiles   UploadFile `json:"upload_files"`
-	Video         VideoCfg   `json:"video"`
+	ScreenshotDir string      `json:"screenshot_dir"`
+	VideoDir      string      `json:"video_dir"`
+	LogFilename   string      `json:"log_filename"`
+	ServerUrl     string      `json:"server_url"`
+	UploadFiles   UploadFile  `json:"upload_files"`
+	Video         VideoCfg    `json:"video"`
+	Database      DatabaseCfg `json:"database"`
 }
 
 func LoadConfig(cfgFilePath string) (Config, error) {
