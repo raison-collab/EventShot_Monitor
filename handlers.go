@@ -1,6 +1,9 @@
 package main
 
 import (
+	"EventShot_Monitor/config"
+	"EventShot_Monitor/utils"
+	"EventShot_Monitor/video_maker"
 	"fmt"
 	"io"
 	"log"
@@ -9,7 +12,7 @@ import (
 	"path/filepath"
 )
 
-func UploadHandler(w http.ResponseWriter, r *http.Request, config Config) {
+func UploadHandler(w http.ResponseWriter, r *http.Request, config config.Config) {
 	if r.Method != http.MethodPost {
 		log.Printf("[%s] Not allowed", r.Method)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -19,13 +22,13 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, config Config) {
 	contentType := r.Header.Get("Content-Type")
 	filename := r.Header.Get("Filename")
 
-	if !CheckContentType(contentType, config.UploadFiles.AllowedContentTypes) {
+	if !utils.CheckContentType(contentType, config.UploadFiles.AllowedContentTypes) {
 		log.Printf("[SERVER] Content-Type %s not allowed", contentType)
 		http.Error(w, "Your Content-Type is not allowed, need image/png", http.StatusBadRequest)
 		return
 	}
 
-	if !CheckFileExtension(filepath.Ext(filename), config.UploadFiles.AllowedFileExtensions) {
+	if !utils.CheckFileExtension(filepath.Ext(filename), config.UploadFiles.AllowedFileExtensions) {
 		log.Printf("[SERVER] wrong file extension, need .png")
 		http.Error(w, "Wrong file extension, need .png", http.StatusBadRequest)
 		return
@@ -79,14 +82,14 @@ func PingHandler(w http.ResponseWriter) {
 	log.Printf("[GET] Ping")
 }
 
-func VideoHandler(w http.ResponseWriter, r *http.Request, config Config) {
+func VideoHandler(w http.ResponseWriter, r *http.Request, config config.Config) {
 	if r.Method != http.MethodGet {
 		log.Printf("[GET] %s not allowed", r.URL)
 		http.Error(w, "Method not allowed", http.StatusBadRequest)
 		return
 	}
 
-	err := RenderVideo(config)
+	err := video_maker.RenderVideo(config)
 	if err != nil {
 		log.Printf("[RENDER ERROR] Ошибка создания ролика: %v\n\n", err)
 		http.Error(w, "Ошибка сервера. Render video error", http.StatusInternalServerError)

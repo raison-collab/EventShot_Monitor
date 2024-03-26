@@ -1,13 +1,15 @@
 package main
 
 import (
+	config2 "EventShot_Monitor/config"
+	"EventShot_Monitor/utils"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	config, err := LoadConfig("config_server.json")
+	config, err := config2.LoadConfig("config_server.json")
 	if err != nil {
 		log.Printf("[ERROR] Ошибка обработки конфиг файла: %v\n", err)
 		os.Exit(1)
@@ -26,8 +28,8 @@ func main() {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
 
-	CreateDir(currentDir + config.ScreenshotDir)
-	CreateDir(currentDir + "/avi_files")
+	utils.CreateDir(currentDir + config.ScreenshotDir)
+	utils.CreateDir(currentDir + config.VideoDir)
 
 	// обработчики endpoint
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {

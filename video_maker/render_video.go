@@ -1,23 +1,26 @@
-package main
+package video_maker
 
 import (
+	"EventShot_Monitor/config"
+	"EventShot_Monitor/errors"
+	"EventShot_Monitor/utils"
 	"github.com/icza/mjpeg"
 	"log"
 	"os"
 )
 
-func RenderVideo(config Config) error {
-	hasFiles, err := HasFilesInScreenshotDir(config)
+func RenderVideo(config config.Config) error {
+	hasFiles, err := utils.HasFilesInScreenshotDir(config)
 	if err != nil {
 		return err
 	}
 
 	if !hasFiles {
 		log.Printf("[DIR] Дирректория пуста")
-		return &EmptyDirError{Message: "Пустая дирректория со скриншотами"}
+		return &errors.EmptyDirError{Message: "Пустая дирректория со скриншотами"}
 	}
 
-	fileNames, err := GetScreenshotsFilenames(config)
+	fileNames, err := utils.GetScreenshotsFilenames(config)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
-package main
+package utils
 
 import (
+	"EventShot_Monitor/config"
 	"log"
 	"os"
 )
@@ -38,7 +39,7 @@ func CheckFileExtension(current string, allowed []string) bool {
 }
 
 // GetScreenshotsFilenames Получает имена файлов в дирректории. В дирректории должны быть файлы, лучше всего снаала проверить их наличие
-func GetScreenshotsFilenames(config Config) ([]string, error) {
+func GetScreenshotsFilenames(config config.Config) ([]string, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		return []string{}, err
@@ -57,7 +58,7 @@ func GetScreenshotsFilenames(config Config) ([]string, error) {
 }
 
 // HasFilesInScreenshotDir проверяет есть ли файлы в дирректории скриншотов
-func HasFilesInScreenshotDir(config Config) (bool, error) {
+func HasFilesInScreenshotDir(config config.Config) (bool, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		return false, err

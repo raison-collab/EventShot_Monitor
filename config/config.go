@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"encoding/json"
@@ -11,11 +11,17 @@ type UploadFile struct {
 	AllowedContentTypes   []string `json:"allowed_content_types"`
 }
 
+type VideoCfg struct {
+	Fps uint `json:"fps"`
+}
+
 type Config struct {
 	ScreenshotDir string     `json:"screenshot_dir"`
+	VideoDir      string     `json:"video_dir"`
 	LogFilename   string     `json:"log_filename"`
 	ServerUrl     string     `json:"server_url"`
 	UploadFiles   UploadFile `json:"upload_files"`
+	Video         VideoCfg   `json:"video"`
 }
 
 func LoadConfig(cfgFilePath string) (Config, error) {
