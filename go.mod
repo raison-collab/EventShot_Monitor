@@ -14,5 +14,6 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/u2takey/ffmpeg-go v0.4.1 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	gorm.io/gorm v1.25.8 // indirect
 )

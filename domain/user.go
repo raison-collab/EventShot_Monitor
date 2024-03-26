@@ -2,6 +2,7 @@ package domain
 
 type User struct {
 	ID             uint   `gorm:"primaryKey;autoincrement;not null"`
+	Username       string `gorm:"not null;uniqueIndex"`
 	HashedPassword string `gorm:"not null"`
 	Role           Role   `gorm:"not null;foreignKey:RoleID"`
 }
