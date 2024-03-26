@@ -84,7 +84,7 @@ func PingHandler(w http.ResponseWriter) {
 
 func VideoHandler(w http.ResponseWriter, r *http.Request, config config.Config) {
 	if r.Method != http.MethodGet {
-		log.Printf("[GET] %s not allowed", r.URL)
+		log.Printf("[POST] %s not allowed", r.URL)
 		http.Error(w, "Method not allowed", http.StatusBadRequest)
 		return
 	}
@@ -95,4 +95,21 @@ func VideoHandler(w http.ResponseWriter, r *http.Request, config config.Config) 
 		http.Error(w, "Ошибка сервера. Render video error", http.StatusInternalServerError)
 		return
 	}
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Printf("[DIR PATH ERROR] Ошибка формирования путь к данной дирректории: %v\n\n", err)
+		http.Error(w, "Ошибка сервера. Render video error", http.StatusInternalServerError)
+		return
+	}
+
+	filePath := currentDir + config.VideoDir + "/avi_01.avi"
+	fileName := "avi_01.avi"
+
+	w.Header().Set("Content-Type", "video/x-msvideo")
+	w.Header().Set("Content-Disposition", "attachment; filename=\""+fileName+"\"")
+
+	http.ServeFile(w, r, filePath)
 }
+
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {}

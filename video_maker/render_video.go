@@ -30,7 +30,7 @@ func RenderVideo(config config.Config) error {
 		return err
 	}
 
-	aw, err := mjpeg.New(currentDir+"/avi_files/avi_01.avi", 200, 100, 2)
+	aw, err := mjpeg.New(currentDir+config.VideoDir+"/avi_01.avi", 200, 100, 2)
 	if err != nil {
 		return err
 	}

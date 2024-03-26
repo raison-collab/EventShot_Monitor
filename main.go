@@ -1,7 +1,7 @@
 package main
 
 import (
-	config2 "EventShot_Monitor/config"
+	"EventShot_Monitor/config"
 	"EventShot_Monitor/utils"
 	"log"
 	"net/http"
@@ -9,13 +9,13 @@ import (
 )
 
 func main() {
-	config, err := config2.LoadConfig("config_server.json")
+	cfg, err := config.LoadConfig("config_server.json")
 	if err != nil {
 		log.Printf("[ERROR] Ошибка обработки конфиг файла: %v\n", err)
 		os.Exit(1)
 	}
 
-	logFile := ConfigureLogging(config.LogFilename)
+	logFile := ConfigureLogging(cfg.LogFilename)
 	defer func(f *os.File) {
 		err := f.Close()
 		if err != nil {
@@ -28,20 +28,21 @@ func main() {
 		log.Printf("Ошибка вычисления пути к данной дирректории: %v\n", err)
 	}
 
-	utils.CreateDir(currentDir + config.ScreenshotDir)
-	utils.CreateDir(currentDir + config.VideoDir)
+	utils.CreateDir(currentDir + cfg.ScreenshotDir)
+	utils.CreateDir(currentDir + cfg.VideoDir)
 
 	// обработчики endpoint
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
-		UploadHandler(w, r, config)
+		UploadHandler(w, r, cfg)
 	})
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		PingHandler(w)
 	})
 	http.HandleFunc("/video", func(w http.ResponseWriter, r *http.Request) {
-		VideoHandler(w, r, config)
+		VideoHandler(w, r, cfg)
 	})
+	http.HandleFunc("/register", RegisterHandler)
 
 	log.Printf("[SERVER] start listening")
-	log.Fatal(http.ListenAndServe(config.ServerUrl, nil))
+	log.Fatal(http.ListenAndServe(cfg.ServerUrl, nil))
 }
